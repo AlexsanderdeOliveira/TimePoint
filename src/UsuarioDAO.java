@@ -44,7 +44,7 @@ public class UsuarioDAO {
     }
 
     public void atualizar(Usuario usuario) {
-        String sql = "UPDATE usuario SET nome = ?, email = ?, cargo = ?, turno = ? WHERE id = ?";
+        String sql = "UPDATE usuario SET nome = ?, email = ?, cargo = ?, turno = ?, senha = ? WHERE id = ?";
         try (Connection conn = Conexao.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -52,7 +52,8 @@ public class UsuarioDAO {
             stmt.setString(2, usuario.getEmail());
             stmt.setString(3, usuario.getCargo());
             stmt.setString(4, usuario.getTurno());
-            stmt.setInt(5, usuario.getId());
+            stmt.setString(5, usuario.getSenha());
+            stmt.setInt(6, usuario.getId());
             stmt.executeUpdate();
             System.out.println("Usuario atualizado com sucesso.");
 
