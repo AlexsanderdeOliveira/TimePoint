@@ -1,10 +1,10 @@
-public abstract class Usuario {
-    protected int id;
-    protected String nome;
-    protected String email;
-    protected String cargo;
-    protected String turno;
-    protected String senha;
+public class Usuario {
+    private int id;
+    private String nome;
+    private String email;
+    private String cargo;
+    private String turno;
+    private String senha;
 
     public Usuario() {}
 
@@ -43,8 +43,6 @@ public abstract class Usuario {
         this.senha = senha;
     }
 
-    public abstract void redirecionarParaDashboard();
-
     // GETTERS E SETTERS
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
@@ -63,6 +61,11 @@ public abstract class Usuario {
 
     public String getSenha() { return senha; }
     public void setSenha(String senha) { this.senha = senha; }
+
+    @Override
+    public String toString() {
+        return "Usuario [id=" + id + ", nome=" + nome + ", email=" + email + ", cargo=" + cargo + ", turno=" + turno + "]";
+    }
 }
 
 
