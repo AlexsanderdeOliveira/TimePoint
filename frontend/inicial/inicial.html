@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicial</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <section class="incial">
+    <div class="firstIcon">
+      <dotlottie-wc src="https://lottie.host/78bf0cee-5519-4134-9738-c34099afd806/ssn9f9jYEy.lottie"
+        style="width: 100%;height: 600px" autoplay loop></dotlottie-wc>
+    </div>
+
+    <div class="formulario">
+      <div class="formularioContent">
+        <h1>Bom dia! Bem-vindo de volta.</h1>
+        <h2 class="title">Login</h2>
+
+        <div class="formularioInfo">
+          <input id="email" type="email" placeholder="Insira seu e-mail">
+        </div>
+
+        <div class="formularioInfo">
+          <input id="senha" type="password" placeholder="Insira sua senha">
+        </div>
+
+        <!-- Mensagem de erro -->
+        <p id="mensagemErro" style="color: red; font-size: 0.85rem; min-height: 1.2rem;"></p>
+
+        <p class="forgotPassword" onclick="forgotPassword()">Esqueceu sua senha?</p>
+
+        <div class="botaoFormulario">
+          <!-- Botão agora chama o JS em vez de redirecionar direto -->
+          <button onclick="fazerLogin()">Login</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+
+<script src="./script.js"></script>
+<script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.3/dist/dotlottie-wc.js" type="module"></script>
+
+</html>

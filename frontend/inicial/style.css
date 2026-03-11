@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap');
+
+html,
+body {
+    height: 100%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.incial {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+
+.firstIcon {
+    width: 50%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+}
+
+
+.firstIcon img {
+    width: 80%;
+    height: 600px;
+    margin: auto;
+}
+
+.title {
+    font-weight: 300;
+    font-family: "Google Sans", sans-serif;
+}
+
+.formulario {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(147, 213, 218, 0.808);
+    width: 50%;
+}
+
+.formularioContent {
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 30px;
+    padding: 40px;
+    gap: 20px;
+    justify-content: center;
+    max-width: 400px;
+}
+
+.formularioInfo {
+    display: flex;
+    width: 400px;
+    gap: 10px;
+
+}
+
+.formularioInfo input {
+    padding: 10px;
+    font-size: 28px;
+}
+
+.botaoFormulario {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.botaoFormulario button {
+    background-color: none;
+    border: none;
+    padding: 15px;
+    width: 150px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid rgb(13, 13, 167);
+    box-shadow: 1px 1px 1px gray;
+}
+
+.forgotPassword {
+    cursor: pointer;
+}
+
+.forgotPassword:hover {
+    color: rgb(248, 83, 61);
+}
+
+.botaoFormulario button:hover {
+    background-color: rgb(13, 13, 167);
+    color: white;
+    transform: 1s;
+}
+
+input {
+    width: 100%;
+}
