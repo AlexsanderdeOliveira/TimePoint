@@ -146,8 +146,6 @@ public class DashboardGerenteController implements HttpHandler {
                         status = 404;
                         resposta = "Usuário não encontrado";
                     } else {
-                        // ✅ Deleta os registros de ponto primeiro (foreign key)
-                        // depois deleta o usuário
                         pontoDAO.excluirPorUsuario(id);
                         usuarioDAO.excluir(id);
                         resposta = "Usuário e seus registros deletados com sucesso";

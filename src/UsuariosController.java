@@ -24,7 +24,6 @@ public class UsuariosController implements HttpHandler {
 
         try {
             if ("POST".equalsIgnoreCase(metodo)) {
-                // Criar novo usuário
                 String jsonBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
                 JsonObject json = JsonParser.parseString(jsonBody).getAsJsonObject();
 
@@ -46,7 +45,6 @@ public class UsuariosController implements HttpHandler {
                 }
 
             } else if ("GET".equalsIgnoreCase(metodo)) {
-                // Listar todos os usuários (para o dashboard do gerente)
                 resposta = gson.toJson(usuarioDAO.listar());
 
             } else {

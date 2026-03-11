@@ -22,7 +22,7 @@ public class UsuarioDAO {
 
     public List<Usuario> listar() {
         List<Usuario> usuarios = new ArrayList<>();
-        String sql = "SELECT * FROM usuarios"; // ✅ corrigido: usuario → usuarios
+        String sql = "SELECT * FROM usuarios";
         try (Connection conn = Conexao.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {

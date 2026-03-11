@@ -41,11 +41,10 @@ public class DashboardController implements HttpHandler {
                     resposta = "Usuário não encontrado";
 
                 } else if ("GET".equalsIgnoreCase(metodo)) {
-                    // Retorna os últimos 7 registros do funcionário logado como JSON
                     resposta = gson.toJson(pontoDAO.listar7UltimosDoUsuario(funcionarioId));
 
                 } else if ("POST".equalsIgnoreCase(metodo)) {
-                    // Registra o ponto conforme o estado do dia
+
                     Ponto ponto = pontoDAO.buscarPorUsuarioEData(funcionarioId, LocalDate.now());
 
                     if (ponto == null) {

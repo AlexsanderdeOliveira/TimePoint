@@ -191,7 +191,6 @@ function formatarData(dataStr) {
   return `${dia}/${mes}`;
 }
 
-// ─── Estados do botão ─────────────────────────────────────────────────────────
 const estados = [
   { texto: "Saída para o Almoço", icone: "fa-utensils", cor: "#5b8dee", sombra: "rgba(91,141,238,0.4)", textoCor: "#fff" },
   { texto: "Volta do Almoço", icone: "fa-rotate-left", cor: "#c8a96e", sombra: "rgba(200,169,110,0.4)", textoCor: "#1a1a2e" },
@@ -199,7 +198,6 @@ const estados = [
 ];
 let estadoAtual = 0;
 
-// ─── Sincroniza o botão com o estado real do banco ao carregar ────────────────
 async function sincronizarBotao() {
   const btn = document.querySelector(".btn-chegada");
   try {
@@ -228,11 +226,11 @@ async function sincronizarBotao() {
       btn.disabled = true;
       estadoAtual = estados.length;
     } else if (pontoHoje.horarioVoltaAlmoco) {
-      aplicarEstado(2); // falta só a saída
+      aplicarEstado(2);
     } else if (pontoHoje.horarioSaidaAlmoco) {
-      aplicarEstado(1); // falta volta do almoço
+      aplicarEstado(1);
     } else {
-      aplicarEstado(0); // chegada registrada, falta saída almoço
+      aplicarEstado(0);
     }
 
   } catch (err) {

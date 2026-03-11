@@ -5,7 +5,6 @@ if (!usuario || usuario.cargo !== "Funcionário") {
   window.location.href = "../inicial/inicial.html";
 }
 
-// ─── Sidebar ──────────────────────────────────────────────────────────────────
 document.querySelector(".user-name").textContent = usuario.nome;
 document.querySelector(".user-role").textContent = usuario.cargo;
 
@@ -24,7 +23,6 @@ document.querySelectorAll(".shift-badge").forEach(el => {
   el.innerHTML = `<i class="fa-regular ${icone}"></i> ${usuario.turno}`;
 });
 
-// ─── Relógio ──────────────────────────────────────────────────────────────────
 function updateClock() {
   const now = new Date();
   const h = String(now.getHours()).padStart(2, "0");
@@ -37,7 +35,7 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 
-// ─── Tabela de registros ──────────────────────────────────────────────────────
+
 async function carregarRegistros() {
   const tbody = document.querySelector("tbody");
   try {
@@ -79,7 +77,7 @@ function formatarData(dataStr) {
   return `${dia}/${mes}`;
 }
 
-// ─── Estados do botão ─────────────────────────────────────────────────────────
+
 const estados = [
   { texto: "Saída para o Almoço", icone: "fa-utensils",                cor: "#5b8dee", sombra: "rgba(91,141,238,0.4)",  textoCor: "#fff"    },
   { texto: "Volta do Almoço",     icone: "fa-rotate-left",             cor: "#c8a96e", sombra: "rgba(200,169,110,0.4)", textoCor: "#1a1a2e" },
@@ -87,7 +85,6 @@ const estados = [
 ];
 let estadoAtual = 0;
 
-// ─── Sincroniza o botão com o estado real do banco ao carregar ────────────────
 async function sincronizarBotao() {
   const btn = document.querySelector(".btn-chegada");
   try {
@@ -128,13 +125,11 @@ async function sincronizarBotao() {
   }
 }
 
-// ─── Registrar ponto ──────────────────────────────────────────────────────────
 async function registrarPonto() {
   const btn = document.querySelector(".btn-chegada");
   btn.disabled = true;
 
   try {
-    // ✅ Rota correta: /dashboard (não /dashboard-gerente)
     const resp  = await fetch(`http://localhost:8080/dashboard/${usuario.id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -172,6 +167,5 @@ async function registrarPonto() {
   }
 }
 
-// ─── Inicializa ───────────────────────────────────────────────────────────────
 carregarRegistros();
 sincronizarBotao();

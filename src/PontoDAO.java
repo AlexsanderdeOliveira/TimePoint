@@ -105,8 +105,6 @@ public class PontoDAO {
         }
         return pontos;
     }
-
-    // ✅ Corrigido: JOIN com usuarios para trazer o nome na tabela do gerente
     public List<Map<String, Object>> listar7UltimosRegistros() {
         List<Map<String, Object>> registros = new ArrayList<>();
         String sql = """
