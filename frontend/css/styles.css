@@ -82,7 +82,6 @@ body {
 }
 
 .user-name {
-  font-family: 'Playfair Display', serif;
   font-size: 1.2rem;
   color: #ffffff;
   text-align: center;
@@ -179,7 +178,6 @@ body {
   color: #1a1a2e;
   border: none;
   border-radius: 8px;
-  font-family: 'DM Sans', sans-serif;
   font-size: 0.85rem;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -219,7 +217,6 @@ body {
 }
 
 .topbar-title {
-  font-family: 'Playfair Display', serif;
   font-size: 1.5rem;
   color: #1a1a2e;
 }
@@ -237,7 +234,7 @@ body {
   color: #e05555;
   border: 1px solid rgba(224, 85, 85, 0.25);
   border-radius: 8px;
-  font-family: 'DM Sans', sans-serif;
+
   font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
@@ -324,7 +321,6 @@ body {
 }
 
 .stat-value {
-  font-family: 'Playfair Display', serif;
   font-size: 1.35rem;
   color: #1a1a2e;
   line-height: 1;

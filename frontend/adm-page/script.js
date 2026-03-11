@@ -13,8 +13,18 @@ document.querySelectorAll(".chip").forEach(chip => {
   if (texto.includes("Turno")) chip.querySelector("strong").textContent = usuario.turno;
 });
 
+const icone = usuario.turno === "Noite" ? "fa-moon" : "fa-sun";
+document.querySelectorAll(".chip").forEach(chip => {
+  const texto = chip.querySelector("span").textContent;
+  if (texto.includes("ID")) chip.querySelector("strong").textContent = usuario.id;
+  if (texto.includes("Turno")) {
+    chip.querySelector("strong").textContent = usuario.turno;
+    chip.querySelector("i").className = `fa-regular ${icone}`;
+  }
+});
+
 document.querySelectorAll(".shift-badge").forEach(el => {
-  el.innerHTML = `<i class="fa-regular fa-sun"></i> ${usuario.turno}`;
+  el.innerHTML = `<i class="fa-regular ${icone}"></i> ${usuario.turno}`;
 });
 
 function updateClock() {
@@ -65,7 +75,6 @@ document.body.insertAdjacentHTML("beforeend", `
   </div>
 `);
 
-// Estado do modal
 let _editUsuarioId = null;
 let _editData = null;
 
@@ -74,8 +83,6 @@ function abrirEdicao(usuarioId, data, nome, chegada, saidaAlmoco, voltaAlmoco, s
   _editData = data;
 
   document.getElementById("modalTitulo").textContent = `Editando registro de ${nome} — ${data}`;
-
-  // Preenche os campos com os valores atuais (remove segundos se vier HH:MM:SS)
   document.getElementById("editChegada").value = chegada ? chegada.substring(0, 5) : "";
   document.getElementById("editSaidaAlmoco").value = saidaAlmoco ? saidaAlmoco.substring(0, 5) : "";
   document.getElementById("editVoltaAlmoco").value = voltaAlmoco ? voltaAlmoco.substring(0, 5) : "";
@@ -134,20 +141,19 @@ async function carregarRegistros() {
       tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:24px;color:#e05c5c;">${texto}</td></tr>`;
       return;
     }
-
     const dados = JSON.parse(texto);
     if (!Array.isArray(dados) || dados.length === 0) {
       tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:24px;color:#8a9baa;">Nenhum registro encontrado.</td></tr>`;
       return;
     }
 
-const statValue = document.querySelector(".stat-value");
-if (statValue) {
-  fetch("http://localhost:8080/usuarios")
-    .then(r => r.json())
-    .then(usuarios => { statValue.textContent = usuarios.length; })
-    .catch(() => { statValue.textContent = ids.length; }); // fallback
-}
+    const statValue = document.querySelector(".stat-value");
+    if (statValue) {
+      fetch("http://localhost:8080/usuarios")
+        .then(r => r.json())
+        .then(usuarios => { statValue.textContent = usuarios.length; })
+        .catch(() => { statValue.textContent = ids.length; }); // fallback
+    }
     tbody.innerHTML = dados.map(r => {
       const data = r.dataRegistro ? formatarData(r.dataRegistro) : "-";
       const ch = r.horarioChegada ?? "";
@@ -185,13 +191,54 @@ function formatarData(dataStr) {
   return `${dia}/${mes}`;
 }
 
-// ─── Registrar ponto ──────────────────────────────────────────────────────────
+// ─── Estados do botão ─────────────────────────────────────────────────────────
 const estados = [
   { texto: "Saída para o Almoço", icone: "fa-utensils", cor: "#5b8dee", sombra: "rgba(91,141,238,0.4)", textoCor: "#fff" },
   { texto: "Volta do Almoço", icone: "fa-rotate-left", cor: "#c8a96e", sombra: "rgba(200,169,110,0.4)", textoCor: "#1a1a2e" },
   { texto: "Horário de Saída", icone: "fa-arrow-right-from-bracket", cor: "#e05555", sombra: "rgba(224,85,85,0.4)", textoCor: "#fff" },
 ];
 let estadoAtual = 0;
+
+// ─── Sincroniza o botão com o estado real do banco ao carregar ────────────────
+async function sincronizarBotao() {
+  const btn = document.querySelector(".btn-chegada");
+  try {
+    const resp = await fetch(`http://localhost:8080/dashboard/${usuario.id}`);
+    const dados = JSON.parse(await resp.text());
+    if (!Array.isArray(dados) || dados.length === 0) return;
+
+    const hoje = new Date().toISOString().split("T")[0];
+    const pontoHoje = dados.find(r => r.dataRegistro === hoje);
+    if (!pontoHoje) return;
+
+    const aplicarEstado = (idx) => {
+      const e = estados[idx];
+      btn.innerHTML = `<i class="fa-solid ${e.icone}"></i> &nbsp;${e.texto}`;
+      btn.style.background = e.cor;
+      btn.style.color = e.textoCor;
+      btn.style.boxShadow = `0 4px 14px ${e.sombra}`;
+      estadoAtual = idx;
+    };
+
+    if (pontoHoje.horarioSaida) {
+      btn.innerHTML = `<i class="fa-solid fa-check"></i> &nbsp;Expediente encerrado`;
+      btn.style.background = "#4caf81";
+      btn.style.color = "#fff";
+      btn.style.boxShadow = "0 4px 14px rgba(76,175,129,0.4)";
+      btn.disabled = true;
+      estadoAtual = estados.length;
+    } else if (pontoHoje.horarioVoltaAlmoco) {
+      aplicarEstado(2); // falta só a saída
+    } else if (pontoHoje.horarioSaidaAlmoco) {
+      aplicarEstado(1); // falta volta do almoço
+    } else {
+      aplicarEstado(0); // chegada registrada, falta saída almoço
+    }
+
+  } catch (err) {
+    console.error("Erro ao sincronizar botão:", err);
+  }
+}
 
 async function registrarChegada() {
   const btn = document.querySelector(".btn-chegada");
@@ -234,3 +281,4 @@ async function registrarChegada() {
   }
 }
 carregarRegistros();
+sincronizarBotao();

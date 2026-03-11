@@ -5,91 +5,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tela de funcionário</title>
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
-<div class="shell">
+    <div class="shell">
 
-    <aside class="sidebar">
-        <div class="avatar-wrap">
-            <img src="https://img.freepik.com/premium-vector/3d-simple-user-icon-isolated_169241-6922.jpg" alt="Avatar">
-            <span class="status-dot"></span>
-        </div>
-
-        <h2 class="user-name">Carregando...</h2>
-        <p class="user-role">Funcionário</p>
-        <div class="divider"></div>
-
-        <div class="info-chips">
-            <div class="chip">
-                <i class="fa-solid fa-id-badge"></i>
-                <span>ID: <strong>-</strong></span>
+        <aside class="sidebar">
+            <div class="avatar-wrap">
+                <img src="https://img.freepik.com/premium-vector/3d-simple-user-icon-isolated_169241-6922.jpg" alt="Avatar">
+                <span class="status-dot"></span>
             </div>
-            <div class="chip">
-                <i class="fa-regular fa-sun"></i>
-                <span>Turno: <strong>-</strong></span>
+
+            <h2 class="user-name">Carregando...</h2>
+            <p class="user-role">Funcionário</p>
+            <div class="divider"></div>
+
+            <div class="info-chips">
+                <div class="chip">
+                    <i class="fa-solid fa-id-badge"></i>
+                    <span>ID: <strong>-</strong></span>
+                </div>
+                <div class="chip">
+                    <i class="fa-regular fa-sun"></i>
+                    <span>Turno: <strong>-</strong></span>
+                </div>
             </div>
-        </div>
 
-        <div class="clock-card">
-            <div class="clock-time" id="clock">00:00:00</div>
-            <div class="clock-date" id="date">carregando...</div>
-        </div>
-
-        <div class="sidebar-spacer"></div>
-
-        <button class="btn-chegada" onclick="registrarPonto()">
-            <i class="fa-solid fa-arrow-right-to-bracket"></i> &nbsp;Registrar Chegada
-        </button>
-    </aside>
-
-    <main class="main">
-        <div class="topbar">
-            <div>
-                <h1 class="topbar-title">Meus <span>Registros</span></h1>
+            <div class="clock-card">
+                <div class="clock-time" id="clock">00:00:00</div>
+                <div class="clock-date" id="date">carregando...</div>
             </div>
-            <a href="../inicial/inicial.html" class="btn-sair">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i> Sair do sistema
-            </a>
-        </div>
 
-        <div class="panel">
-            <div class="panel-header">
+            <div class="sidebar-spacer"></div>
+
+            <button class="btn-chegada" onclick="registrarPonto()">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i> &nbsp;Registrar Chegada
+            </button>
+        </aside>
+
+        <main class="main">
+            <div class="topbar">
                 <div>
-                    <h3>Registros de Ponto</h3>
-                    <p>Aqui estão seus últimos registros para consulta.</p>
+                    <h1 class="topbar-title">Meus <span>Registros</span></h1>
                 </div>
-                <div class="shift-badge">
-                    <i class="fa-regular fa-sun"></i> -
-                </div>
+                <a href="../inicial/inicial.html" class="btn-sair">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Sair do sistema
+                </a>
             </div>
 
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Chegada</th>
-                            <th>Saída almoço</th>
-                            <th>Volta almoço</th>
-                            <th>Saída</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="5" style="text-align:center; padding: 24px; color: #8a9baa;">
-                                Carregando registros...
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="panel">
+                <div class="panel-header">
+                    <div>
+                        <h3>Registros de Ponto</h3>
+                        <p>Aqui estão seus últimos registros para consulta.</p>
+                    </div>
+                    <div class="shift-badge">
+                        <i class="fa-regular fa-sun"></i> -
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Chegada</th>
+                                <th>Saída almoço</th>
+                                <th>Volta almoço</th>
+                                <th>Saída</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="5" style="text-align:center; padding: 24px; color: #8a9baa;">
+                                    Carregando registros...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-    </main>
-</div>
+        </main>
+    </div>
 </body>
-<script src="script.js"></script>
+
+<script src="./script.js"></script>
+
 </html>
