@@ -4,9 +4,9 @@ import java.util.*;
 public class UsuarioDAO {
 
     public void criar(Usuario usuario) {
-        String sql = "INSERT INTO usuario (nome, email, cargo, turno, senha) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO usuarios (nome, email, cargo, turno, senha) VALUES (?, ?, ?, ?, ?)"; // ✅ corrigido: usuario → usuarios
         try (Connection conn = Conexao.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql))  {
+             PreparedStatement stmt = conn.prepareStatement(sql))  {
 
             stmt.setString(1, usuario.getNome());
             stmt.setString(2, usuario.getEmail());
@@ -22,10 +22,10 @@ public class UsuarioDAO {
 
     public List<Usuario> listar() {
         List<Usuario> usuarios = new ArrayList<>();
-        String sql = "SELECT * FROM usuario";
+        String sql = "SELECT * FROM usuarios"; // ✅ corrigido: usuario → usuarios
         try (Connection conn = Conexao.getConnection();
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(sql)) {
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
 
             while(rs.next()) {
                 Usuario u = new Usuario (
@@ -44,7 +44,7 @@ public class UsuarioDAO {
     }
 
     public void atualizar(Usuario usuario) {
-        String sql = "UPDATE usuario SET nome = ?, email = ?, cargo = ?, turno = ?, senha = ? WHERE id = ?";
+        String sql = "UPDATE usuarios SET nome = ?, email = ?, cargo = ?, turno = ?, senha = ? WHERE id = ?";
         try (Connection conn = Conexao.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -63,22 +63,21 @@ public class UsuarioDAO {
     }
 
     public void excluir(int id) {
-        String sql = "DELETE FROM usuario WHERE id = ?";
+        String sql = "DELETE FROM usuarios WHERE id = ?";
         try (Connection conn = Conexao.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-        stmt.setInt(1, id);
-        stmt.executeUpdate();
-        System.out.println("Usuário excluído com sucesso.");
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+            System.out.println("Usuário excluído com sucesso.");
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     public Usuario buscarPorEmail(String email) {
-        String sql = "SELECT * FROM usuario WHERE email = ?";
+        String sql = "SELECT * FROM usuarios WHERE email = ?";
         try (Connection conn = Conexao.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -102,7 +101,7 @@ public class UsuarioDAO {
     }
 
     public Usuario buscarPorId(int id) {
-        String sql = "SELECT * FROM usuario WHERE id = ?";
+        String sql = "SELECT * FROM usuarios WHERE id = ?";
         try (Connection conn = Conexao.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 

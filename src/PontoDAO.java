@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class PontoDAO {
+
     public Ponto buscarPorUsuarioEData(int usuarioId, LocalDate data) {
         String sql = "SELECT * FROM registro WHERE usuarios_id = ? AND data_registro = ?";
         try (Connection conn = Conexao.getConnection();
@@ -18,10 +19,10 @@ public class PontoDAO {
                         rs.getInt("id"),
                         rs.getInt("usuarios_id"),
                         rs.getDate("data_registro").toLocalDate(),
-                        rs.getTime("horario_chegada") != null ? rs.getTime("horario_chegada").toLocalTime() : null,
+                        rs.getTime("horario_chegada")      != null ? rs.getTime("horario_chegada").toLocalTime()      : null,
                         rs.getTime("horario_saida_almoco") != null ? rs.getTime("horario_saida_almoco").toLocalTime() : null,
                         rs.getTime("horario_volta_almoco") != null ? rs.getTime("horario_volta_almoco").toLocalTime() : null,
-                        rs.getTime("horario_saida") != null ? rs.getTime("horario_saida").toLocalTime() : null
+                        rs.getTime("horario_saida")        != null ? rs.getTime("horario_saida").toLocalTime()        : null
                 );
             }
         } catch (SQLException e) {
@@ -71,7 +72,6 @@ public class PontoDAO {
             stmt.setObject(3, ponto.getHorarioVoltaAlmoco());
             stmt.setObject(4, ponto.getHorarioSaida());
             stmt.setInt(5, ponto.getId());
-
             stmt.executeUpdate();
             System.out.println("Ponto atualizado completamente com sucesso.");
         } catch (SQLException e) {
@@ -89,14 +89,14 @@ public class PontoDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Ponto p = new Ponto (
+                Ponto p = new Ponto(
                         rs.getInt("id"),
                         rs.getInt("usuarios_id"),
                         rs.getDate("data_registro").toLocalDate(),
-                        rs.getTime("horario_chegada") != null ? rs.getTime("horario_chegada").toLocalTime() : null,
+                        rs.getTime("horario_chegada")      != null ? rs.getTime("horario_chegada").toLocalTime()      : null,
                         rs.getTime("horario_saida_almoco") != null ? rs.getTime("horario_saida_almoco").toLocalTime() : null,
                         rs.getTime("horario_volta_almoco") != null ? rs.getTime("horario_volta_almoco").toLocalTime() : null,
-                        rs.getTime("horario_saida") != null ? rs.getTime("horario_saida").toLocalTime() : null
+                        rs.getTime("horario_saida")        != null ? rs.getTime("horario_saida").toLocalTime()        : null
                 );
                 pontos.add(p);
             }
@@ -106,28 +106,43 @@ public class PontoDAO {
         return pontos;
     }
 
-    public List<Ponto> listar7UltimosRegistros() {
-        List<Ponto> pontos = new ArrayList<>();
-        String sql = "SELECT * FROM registro ORDER BY data_registro DESC LIMIT 7";
+    // ✅ Corrigido: JOIN com usuarios para trazer o nome na tabela do gerente
+    public List<Map<String, Object>> listar7UltimosRegistros() {
+        List<Map<String, Object>> registros = new ArrayList<>();
+        String sql = """
+                SELECT r.id,
+                       r.usuarios_id        AS usuariosId,
+                       u.nome               AS nomeUsuario,
+                       r.data_registro      AS dataRegistro,
+                       r.horario_chegada    AS horarioChegada,
+                       r.horario_saida_almoco  AS horarioSaidaAlmoco,
+                       r.horario_volta_almoco  AS horarioVoltaAlmoco,
+                       r.horario_saida      AS horarioSaida
+                FROM registro r
+                JOIN usuarios u ON u.id = r.usuarios_id
+                ORDER BY r.data_registro DESC, r.id DESC
+                LIMIT 50
+                """;
+
         try (Connection conn = Conexao.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                Ponto p = new Ponto(
-                        rs.getInt("id"),
-                        rs.getInt("usuarios_id"),
-                        rs.getDate("data_registro").toLocalDate(),
-                        rs.getTime("horario_chegada") != null ? rs.getTime("horario_chegada").toLocalTime() : null,
-                        rs.getTime("horario_saida_almoco") != null ? rs.getTime("horario_saida_almoco").toLocalTime() : null,
-                        rs.getTime("horario_volta_almoco") != null ? rs.getTime("horario_volta_almoco").toLocalTime() : null,
-                        rs.getTime("horario_saida") != null ? rs.getTime("horario_saida").toLocalTime() : null
-                );
-                pontos.add(p);
+                Map<String, Object> row = new LinkedHashMap<>();
+                row.put("id",                 rs.getInt("id"));
+                row.put("usuariosId",         rs.getInt("usuariosId"));
+                row.put("nomeUsuario",        rs.getString("nomeUsuario"));
+                row.put("dataRegistro",       String.valueOf(rs.getDate("dataRegistro")));
+                row.put("horarioChegada",     rs.getString("horarioChegada"));
+                row.put("horarioSaidaAlmoco", rs.getString("horarioSaidaAlmoco"));
+                row.put("horarioVoltaAlmoco", rs.getString("horarioVoltaAlmoco"));
+                row.put("horarioSaida",       rs.getString("horarioSaida"));
+                registros.add(row);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return pontos;
+        return registros;
     }
 }
