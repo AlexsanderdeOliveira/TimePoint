@@ -46,14 +46,13 @@ public class PontoDAO {
     }
 
     public void atualizar(Ponto ponto) {
-        String sql = "UPDATE registro SET horario_saida_almoco = ?, " +
-                "horario_volta_almoco = ?, horario_saida = ? WHERE id = ?";
+        String sql = "UPDATE registro SET horario_saida_almoco = ?, horario_volta_almoco = ?, horario_saida = ? WHERE id = ?";
         try (Connection conn = Conexao.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setTime(1, ponto.getHorarioSaidaAlmoco() != null ? java.sql.Time.valueOf(ponto.getHorarioSaidaAlmoco()) : null);
-            stmt.setTime(2, ponto.getHorarioVoltaAlmoco() != null ? java.sql.Time.valueOf(ponto.getHorarioVoltaAlmoco()) : null);
-            stmt.setTime(3, ponto.getHorarioSaida() != null ? java.sql.Time.valueOf(ponto.getHorarioSaida()) : null);
+            stmt.setObject(1, ponto.getHorarioSaidaAlmoco());
+            stmt.setObject(2, ponto.getHorarioVoltaAlmoco());
+            stmt.setObject(3, ponto.getHorarioSaida());
             stmt.setInt(4, ponto.getId());
             stmt.executeUpdate();
             System.out.println("Ponto atualizado com sucesso.");
@@ -67,10 +66,10 @@ public class PontoDAO {
         try (Connection conn = Conexao.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setTime(1, ponto.getHorarioChegada() != null ? java.sql.Time.valueOf(ponto.getHorarioChegada()) : null);
-            stmt.setTime(2, ponto.getHorarioSaidaAlmoco() != null ? java.sql.Time.valueOf(ponto.getHorarioSaidaAlmoco()) : null);
-            stmt.setTime(3, ponto.getHorarioVoltaAlmoco() != null ? java.sql.Time.valueOf(ponto.getHorarioVoltaAlmoco()) : null);
-            stmt.setTime(4, ponto.getHorarioSaida() != null ? java.sql.Time.valueOf(ponto.getHorarioSaida()) : null);
+            stmt.setObject(1, ponto.getHorarioChegada());
+            stmt.setObject(2, ponto.getHorarioSaidaAlmoco());
+            stmt.setObject(3, ponto.getHorarioVoltaAlmoco());
+            stmt.setObject(4, ponto.getHorarioSaida());
             stmt.setInt(5, ponto.getId());
 
             stmt.executeUpdate();
@@ -91,6 +90,31 @@ public class PontoDAO {
 
             while (rs.next()) {
                 Ponto p = new Ponto (
+                        rs.getInt("id"),
+                        rs.getInt("usuarios_id"),
+                        rs.getDate("data_registro").toLocalDate(),
+                        rs.getTime("horario_chegada") != null ? rs.getTime("horario_chegada").toLocalTime() : null,
+                        rs.getTime("horario_saida_almoco") != null ? rs.getTime("horario_saida_almoco").toLocalTime() : null,
+                        rs.getTime("horario_volta_almoco") != null ? rs.getTime("horario_volta_almoco").toLocalTime() : null,
+                        rs.getTime("horario_saida") != null ? rs.getTime("horario_saida").toLocalTime() : null
+                );
+                pontos.add(p);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return pontos;
+    }
+
+    public List<Ponto> listar7UltimosRegistros() {
+        List<Ponto> pontos = new ArrayList<>();
+        String sql = "SELECT * FROM registro ORDER BY data_registro DESC LIMIT 7";
+        try (Connection conn = Conexao.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Ponto p = new Ponto(
                         rs.getInt("id"),
                         rs.getInt("usuarios_id"),
                         rs.getDate("data_registro").toLocalDate(),

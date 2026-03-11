@@ -93,11 +93,6 @@ public class DashboardGerenteController implements HttpHandler {
                     resposta = "ID não informado";
                 }
             } // PUT /dashboard-gerente/1 - Editar usuário
-
-
-
-
-
             else if ("PUT".equalsIgnoreCase(metodo)) {
                 String[] partes = caminho.split("/");
                 if (partes.length >= 3) {
@@ -106,6 +101,7 @@ public class DashboardGerenteController implements HttpHandler {
                     String jsonBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
                     JsonObject json = JsonParser.parseString(jsonBody).getAsJsonObject();
 
+                    // Atualizar dados do Usuário se tiver
                     if (json.has("nome") || json.has("email") || json.has("cargo") || json.has("turno") || json.has("senha")) {
                         Usuario usuario = usuarioDAO.buscarPorId(id);
                         if (usuario != null) {
@@ -118,14 +114,32 @@ public class DashboardGerenteController implements HttpHandler {
                         }
                     }
 
+                    // Atualizar horários do ponto se tiver
+                    if (json.has("dataRegistro") || json.has("horarioChegada") || json.has("horarioSaidaAlmoco") || json.has("horarioVoltaAlmoco") || json.has("horarioSaida")) {
 
+                        LocalDate dataRegistro = json.has("dataRegistro") ?
+                                LocalDate.parse(json.get("dataRegistro").getAsString()) : LocalDate.now();
+
+                        Ponto ponto = pontoDAO.buscarPorUsuarioEData(id, dataRegistro);
+                        if (ponto != null) {
+                            if (json.has("horarioChegada"))
+                                ponto.setHorarioChegada(LocalTime.parse(json.get("horarioChegada").getAsString()));
+                            if (json.has("horarioSaidaAlmoco"))
+                                ponto.setHorarioSaidaAlmoco(LocalTime.parse(json.get("horarioSaidaAlmoco").getAsString()));
+                            if (json.has("horarioVoltaAlmoco"))
+                                ponto.setHorarioVoltaAlmoco(LocalTime.parse(json.get("horarioVoltaAlmoco").getAsString()));
+                            if (json.has("horarioSaida"))
+                                ponto.setHorarioSaida(LocalTime.parse(json.get("horarioSaida").getAsString()));
+
+                            pontoDAO.atualizarCompleto(ponto);
+                        }
+                    }
+
+                    resposta = "Dados atualizados com sucesso";
                 } else {
                     status = 400;
                     resposta = "ID não informado";
                 }
-
-
-
             } // DELETE /dashboard-gerente/1 - Deletar usuário
             else if ("DELETE".equalsIgnoreCase(metodo)) {
                 String[] partes = caminho.split("/");
