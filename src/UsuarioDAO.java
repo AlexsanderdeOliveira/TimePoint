@@ -100,4 +100,28 @@ public class UsuarioDAO {
         }
         return null;
     }
+
+    public Usuario buscarPorId(int id) {
+        String sql = "SELECT * FROM usuario WHERE id = ?";
+        try (Connection conn = Conexao.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new Usuario(
+                        rs.getInt("id"),
+                        rs.getString("nome"),
+                        rs.getString("email"),
+                        rs.getString("cargo"),
+                        rs.getString("turno"),
+                        rs.getString("senha")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

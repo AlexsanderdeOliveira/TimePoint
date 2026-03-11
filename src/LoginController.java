@@ -15,8 +15,6 @@ public class LoginController implements HttpHandler {
 
         String metodo = exchange.getRequestMethod();
         String caminho = exchange.getRequestURI().getPath();
-        String resposta = "";
-        int status = 200;
 
         if ("OPTIONS".equalsIgnoreCase(metodo)) {
             exchange.sendResponseHeaders(204, -1);

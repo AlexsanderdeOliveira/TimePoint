@@ -79,4 +79,31 @@ public class PontoDAO {
             e.printStackTrace();
         }
     }
+
+    public List<Ponto> listar7UltimosDoUsuario(int usuarioId) {
+        List<Ponto> pontos = new ArrayList<>();
+        String sql = "SELECT * FROM registro WHERE usuarios_id = ? ORDER BY data_registro DESC LIMIT 7";
+        try (Connection conn = Conexao.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, usuarioId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Ponto p = new Ponto (
+                        rs.getInt("id"),
+                        rs.getInt("usuarios_id"),
+                        rs.getDate("data_registro").toLocalDate(),
+                        rs.getTime("horario_chegada") != null ? rs.getTime("horario_chegada").toLocalTime() : null,
+                        rs.getTime("horario_saida_almoco") != null ? rs.getTime("horario_saida_almoco").toLocalTime() : null,
+                        rs.getTime("horario_volta_almoco") != null ? rs.getTime("horario_volta_almoco").toLocalTime() : null,
+                        rs.getTime("horario_saida") != null ? rs.getTime("horario_saida").toLocalTime() : null
+                );
+                pontos.add(p);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return pontos;
+    }
 }
