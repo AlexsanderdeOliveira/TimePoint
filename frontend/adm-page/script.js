@@ -1,7 +1,7 @@
 const usuario = JSON.parse(sessionStorage.getItem("usuario"));
 
 if (!usuario || usuario.cargo !== "Gerente") {
-  window.location.href = "./inicial.html";
+  window.location.href = "../inicial/inicial.html";
 }
 
 document.querySelector(".user-name").textContent = usuario.nome;

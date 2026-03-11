@@ -5,7 +5,7 @@ import com.google.gson.*;
 
 public class UsuariosController implements HttpHandler {
     private final UsuarioDAO usuarioDAO = new UsuarioDAO();
-    private final Gson gson = new Gson();
+    private final Gson gson = GsonUtil.GSON;
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
