@@ -1,20 +1,22 @@
 import com.sun.net.httpserver.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import com.google.gson.*;
 
 public class LoginController implements HttpHandler {
-    private final UsuarioDAO dao = new UsuarioDAO();
+    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
+    private final Gson gson = new Gson();
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        // CORS
         exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
         exchange.getResponseHeaders().set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         exchange.getResponseHeaders().set("Access-Control-Allow-Headers", "Content-Type");
 
         String metodo = exchange.getRequestMethod();
         String caminho = exchange.getRequestURI().getPath();
+        String resposta = "";
+        int status = 200;
 
         if ("OPTIONS".equalsIgnoreCase(metodo)) {
             exchange.sendResponseHeaders(204, -1);
@@ -22,78 +24,47 @@ public class LoginController implements HttpHandler {
         }
 
         try {
-            // se for POST em /login, fazer o login
-            if("POST".equalsIgnoreCase(metodo) && caminho.equals("/login")) {
-                fazerLogin(exchange);
+            if ("POST".equalsIgnoreCase(metodo) && caminho.equals("/login")) {
+                String jsonBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+                JsonObject json = JsonParser.parseString(jsonBody).getAsJsonObject();
+
+                String email = json.has("email") ? json.get("email").getAsString() : null;
+                String senha = json.has("senha") ? json.get("senha").getAsString() : null;
+
+                if (email == null || senha == null || email.isEmpty() || senha.isEmpty()) {
+                    status = 400;
+                    resposta = "Email e senha são obrigatórios";
+                } else {
+                    Usuario usuario = usuarioDAO.buscarPorEmail(email);
+
+                    if (usuario != null && usuario.getSenha().equals(senha)) {
+                        JsonObject usuarioJson = new JsonObject();
+                        usuarioJson.addProperty("id", usuario.getId());
+                        usuarioJson.addProperty("nome", usuario.getNome());
+                        usuarioJson.addProperty("email", usuario.getEmail());
+                        usuarioJson.addProperty("cargo", usuario.getCargo());
+                        usuarioJson.addProperty("turno", usuario.getTurno());
+                        resposta = gson.toJson(usuarioJson);
+                    } else {
+                        status = 401;
+                        resposta = "Email ou senha incorretos";
+                    }
+                }
             } else {
-                // se não for POST em login, retorna o erro 404
-                enviarResposta(exchange, 404, "Rota não encontrada");
+                status = 404;
+                resposta = "Rota não encontrada";
             }
         }  catch (Exception e) {
-            // se der erro retorna 500
-            enviarResposta(exchange, 500, "Erro interno: " + e.getMessage());
+            status = 500;
+            resposta = "Erro: " + e.getMessage();
             e.printStackTrace();
         }
-    }
 
-    private void fazerLogin(HttpExchange exchange) throws IOException {
-        // parte 1, ler o corpo da requisição
-        InputStream inputStream = exchange.getRequestBody();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String corpo = reader.readLine();
-
-        //parte 2, extrair email e senha do corpo da requisição
-        Map<String, String> dados = extrairDados(corpo);
-        String email = dados.get("email");
-        String senha = dados.get("senha");
-
-        // parte 3, validar se email e senha foram enviados
-        if (email == null || senha == null || email.isEmpty() || senha.isEmpty()) {
-            enviarResposta(exchange, 400, "Email e senha são obrigatórios");
-            return;
-        }
-
-        // parte 4, buscar usuario no banco de dados
-        Usuario usuario = dao.buscarPorEmail(email);
-
-        // parte 5, validar se usuario existe e se sua senha está correta
-        if (usuario != null && usuario.getSenha().equals(senha)) {
-            // Login ok -- retorna os dados do usuario
-            String resposta = "Login realizado com sucesso. Bem-vindo, " + usuario.getNome() + "! com cargo: " + usuario.getCargo();
-            enviarResposta(exchange, 200, resposta);
-        } else {
-            // Login falhou
-            enviarResposta(exchange, 401, "Email ou senha incorretos");
-        }
-    }
-
-    private Map<String, String> extrairDados(String corpo) {
-        Map<String, String> dados = new HashMap<>();
-
-        if (corpo == null || corpo.isEmpty()) {
-            return dados;
-        }
-
-        // Dividir por "&" e separar o email e a senha
-        String[] partes =  corpo.split("&");
-
-        for (String parte : partes) {
-            // Divide cada parte por "=" para separar chave e valor
-            String[] chaveValor = parte.split("=");
-            if(chaveValor.length == 2) {
-                dados.put(chaveValor[0], chaveValor[1]);
-            }
-        }
-
-        return dados;
-    }
-
-    private void enviarResposta(HttpExchange exchange, int status, String mensagem) throws IOException {
-        exchange.getResponseHeaders().set("Content-type", "text/plain; charset=utf-8");
-        byte[] response = mensagem.getBytes(StandardCharsets.UTF_8);
-        exchange.sendResponseHeaders(status, response.length);
+        exchange.getResponseHeaders().set("Content-Type", "application/json");
+        exchange.sendResponseHeaders(status, resposta.getBytes(StandardCharsets.UTF_8).length);
         OutputStream os = exchange.getResponseBody();
-        os.write(response);
+        os.write(resposta.getBytes(StandardCharsets.UTF_8));
         os.close();
     }
+
 }
