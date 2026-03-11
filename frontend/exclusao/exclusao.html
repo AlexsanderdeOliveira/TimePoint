@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Colaborador</title>
+  <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.3/dist/dotlottie-wc.js" type="module"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container-info {
+      display: flex;
+      background-color: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      max-width: 720px;
+      width: 100%;
+    }
+
+    .lottie-side {
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      min-width: 260px;
+    }
+
+    .formulario {
+      padding: 40px 36px;
+      flex: 1;
+      background: linear-gradient(145deg, #f8e8e8, #eec8c8);
+    }
+
+    .formulario h1 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #1a2e35;
+      margin-bottom: 6px;
+    }
+
+    .formulario p.subtitulo {
+      font-size: 0.82rem;
+      color: #8a9baa;
+      margin-bottom: 24px;
+    }
+
+    .infoFormulario {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #5a7080;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    input,
+    select {
+      padding: 10px 14px;
+      border: 1.5px solid #eee2e2;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      color: #1a2e35;
+      background: #f8fbfc;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    input::placeholder {
+      color: #b0bec7;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #7dd0d6;
+      background: #ffffff;
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      padding-right: 36px;
+    }
+
+    #mensagemErro {
+      color: #e05c5c;
+      font-size: 0.82rem;
+      min-height: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    .botoes {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    #voltarBotao {
+      background: #f0f4f8;
+      color: #5a7080;
+      flex: 1;
+    }
+
+    #voltarBotao:hover {
+      background: #e2eaee;
+    }
+
+    #cadastrarBotao {
+      background: #c64b4b;
+      color: white;
+      flex: 2;
+    }
+
+    #cadastrarBotao:hover {
+      background: red;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-info">
+    <div class="lottie-side">
+      <dotlottie-wc src="https://lottie.host/047500a4-a403-4705-9938-e972a12b45f8/hewHGMdjDF.lottie"
+        style="width: 300px;height: 300px" autoplay loop></dotlottie-wc>
+    </div>
+
+    <div class="formulario">
+      <h1>Excluir Colaborador</h1>
+      <p class="subtitulo">Preencha os dados já existentes para excluir um colaborador</p>
+
+       <div class="infoFormulario">
+        <div class="field-group">
+          <label>Nome do colaborador</label>
+          <input id="nome" type="text" placeholder="Nome">
+        </div>
+        <div class="field-group">
+          <label>ID do colaborador</label>
+          <input id="id" type="number" placeholder="">
+        </div>
+      </div>
+
+
+      <p id="mensagemErro"></p>
+
+      <div class="botoes">
+        <button id="voltarBotao" onclick="window.location.href='../adm-page/page.html'">Voltar</button>
+        <button id="cadastrarBotao">Excluir</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="script.js">
+
+    
+  </script>
+  
+
+</body>
+
+</html>

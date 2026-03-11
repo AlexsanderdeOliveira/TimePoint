@@ -18,7 +18,7 @@ public class DashboardGerenteController implements HttpHandler {
 
         String metodo = exchange.getRequestMethod();
         String caminho = exchange.getRequestURI().getPath();
-        String resposta =  "";
+        String resposta = "";
         int status = 200;
 
         if ("OPTIONS".equalsIgnoreCase(metodo)) {
@@ -27,7 +27,6 @@ public class DashboardGerenteController implements HttpHandler {
         }
 
         try {
-            // GET /dashboard-gerente/3 - ver dashboard do gerente com os ultimos 7 funcioanarios
             if ("GET".equalsIgnoreCase(metodo)) {
                 String[] partes = caminho.split("/");
                 if (partes.length >= 3) {
@@ -47,8 +46,8 @@ public class DashboardGerenteController implements HttpHandler {
                     status = 400;
                     resposta = "ID não informado";
                 }
-            } // POST /dashboard-gerente/3 - Gerente registra seu proprio ponto
-            else if ("POST".equalsIgnoreCase(metodo)){
+
+            } else if ("POST".equalsIgnoreCase(metodo)) {
                 String[] partes = caminho.split("/");
                 if (partes.length >= 3) {
                     int gerenteId = Integer.parseInt(partes[2]);
@@ -64,12 +63,10 @@ public class DashboardGerenteController implements HttpHandler {
                         Ponto ponto = pontoDAO.buscarPorUsuarioEData(gerenteId, LocalDate.now());
 
                         if (ponto == null) {
-                            // se for primeiro clique, não vai ter registro, logo vai criar um
                             ponto = new Ponto(gerenteId, LocalDate.now(), LocalTime.now());
                             pontoDAO.criar(ponto);
                             resposta = "Chegada registrada em " + LocalTime.now();
                         } else {
-                            // 2º, 3º e 4º cliques -  atualizar ponto
                             if (ponto.getHorarioSaidaAlmoco() == null) {
                                 ponto.setHorarioSaidaAlmoco(LocalTime.now());
                                 pontoDAO.atualizar(ponto);
@@ -92,8 +89,8 @@ public class DashboardGerenteController implements HttpHandler {
                     status = 400;
                     resposta = "ID não informado";
                 }
-            } // PUT /dashboard-gerente/1 - Editar usuário
-            else if ("PUT".equalsIgnoreCase(metodo)) {
+
+            } else if ("PUT".equalsIgnoreCase(metodo)) {
                 String[] partes = caminho.split("/");
                 if (partes.length >= 3) {
                     int id = Integer.parseInt(partes[2]);
@@ -101,11 +98,10 @@ public class DashboardGerenteController implements HttpHandler {
                     String jsonBody = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
                     JsonObject json = JsonParser.parseString(jsonBody).getAsJsonObject();
 
-                    // Atualizar dados do Usuário se tiver
                     if (json.has("nome") || json.has("email") || json.has("cargo") || json.has("turno") || json.has("senha")) {
                         Usuario usuario = usuarioDAO.buscarPorId(id);
                         if (usuario != null) {
-                            if (json.has("nome")) usuario.setNome(json.get("nome").getAsString());
+                            if (json.has("nome"))  usuario.setNome(json.get("nome").getAsString());
                             if (json.has("email")) usuario.setEmail(json.get("email").getAsString());
                             if (json.has("cargo")) usuario.setCargo(json.get("cargo").getAsString());
                             if (json.has("turno")) usuario.setTurno(json.get("turno").getAsString());
@@ -114,11 +110,10 @@ public class DashboardGerenteController implements HttpHandler {
                         }
                     }
 
-                    // Atualizar horários do ponto se tiver
                     if (json.has("dataRegistro") || json.has("horarioChegada") || json.has("horarioSaidaAlmoco") || json.has("horarioVoltaAlmoco") || json.has("horarioSaida")) {
-
-                        LocalDate dataRegistro = json.has("dataRegistro") ?
-                                LocalDate.parse(json.get("dataRegistro").getAsString()) : LocalDate.now();
+                        LocalDate dataRegistro = json.has("dataRegistro")
+                                ? LocalDate.parse(json.get("dataRegistro").getAsString())
+                                : LocalDate.now();
 
                         Ponto ponto = pontoDAO.buscarPorUsuarioEData(id, dataRegistro);
                         if (ponto != null) {
@@ -140,8 +135,8 @@ public class DashboardGerenteController implements HttpHandler {
                     status = 400;
                     resposta = "ID não informado";
                 }
-            } // DELETE /dashboard-gerente/1 - Deletar usuário
-            else if ("DELETE".equalsIgnoreCase(metodo)) {
+
+            } else if ("DELETE".equalsIgnoreCase(metodo)) {
                 String[] partes = caminho.split("/");
                 if (partes.length >= 3) {
                     int id = Integer.parseInt(partes[2]);
@@ -151,23 +146,26 @@ public class DashboardGerenteController implements HttpHandler {
                         status = 404;
                         resposta = "Usuário não encontrado";
                     } else {
+                        // ✅ Deleta os registros de ponto primeiro (foreign key)
+                        // depois deleta o usuário
+                        pontoDAO.excluirPorUsuario(id);
                         usuarioDAO.excluir(id);
-                        resposta = "Usuário deletado com sucesso";
+                        resposta = "Usuário e seus registros deletados com sucesso";
                     }
                 } else {
                     status = 400;
                     resposta = "ID não informado";
                 }
-            } // NENHUMA ACIMA
-            else {
+
+            } else {
                 status = 400;
                 resposta = "Método não permitido";
             }
 
         } catch (Exception e) {
-           status = 500;
-           resposta = "Erro: " + e.getMessage();
-           e.printStackTrace();
+            status = 500;
+            resposta = "Erro: " + e.getMessage();
+            e.printStackTrace();
         }
 
         exchange.getResponseHeaders().set("Content-Type", "application/json");
@@ -176,5 +174,4 @@ public class DashboardGerenteController implements HttpHandler {
         os.write(resposta.getBytes(StandardCharsets.UTF_8));
         os.close();
     }
-
 }

@@ -96,14 +96,13 @@ async function registrarPonto() {
   btn.disabled = true;
 
   try {
-    // ✅ URL corrigida: inclui o ID do usuário logado
     const resp = await fetch(`http://localhost:8080/dashboard/${usuario.id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
     });
 
     const texto = await resp.text();
-
+    console.log(texto)
     if (!resp.ok) {
       alert(texto || "Erro ao registrar ponto.");
       btn.disabled = false;

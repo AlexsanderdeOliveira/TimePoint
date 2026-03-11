@@ -145,4 +145,42 @@ public class PontoDAO {
         }
         return registros;
     }
+
+
+    public void excluirPorUsuario(int usuarioId) {
+        String sql = "DELETE FROM registro WHERE usuarios_id = ?";
+        try (Connection conn = Conexao.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, usuarioId);
+            stmt.executeUpdate();
+            System.out.println("Registros de ponto do usuário " + usuarioId + " excluídos.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
